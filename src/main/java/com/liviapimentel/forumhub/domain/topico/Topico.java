@@ -1,22 +1,42 @@
+package com.liviapimentel.forumhub.domain.topico;
 
 import com.liviapimentel.forumhub.domain.curso.Curso;
 import com.liviapimentel.forumhub.domain.resposta.Resposta;
-import com.liviapimentel.forumhub.domain.topico.StatusTopico;
 import com.liviapimentel.forumhub.domain.usuario.Usuario;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Topico{
+@Entity(name = "Topico")
+@Table(name = "topicos")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(of = "id")
+public class Topico {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String titulo;
     private String mensagem;
     private LocalDateTime dataCriacao = LocalDateTime.now();
-    private StatusTopico status = StatusTopico.NAO_RESPONDIDO;
-    private Usuario autor;
-    private Curso curso;
-    private List<Resposta> respostas = new ArrayList<>();
 
+    @Enumerated(EnumType.STRING)
+    private StatusTopico status = StatusTopico.NAO_RESPONDIDO;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "autor_id")
+    private Usuario autor;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "curso_id")
+    private Curso curso;
+
+    @OneToMany(mappedBy = "topico", cascade = CascadeType.ALL)
+    private List<Resposta> respostas = new ArrayList<>();
 }

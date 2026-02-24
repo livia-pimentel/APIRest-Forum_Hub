@@ -2,12 +2,14 @@ package com.liviapimentel.forumhub.domain.topico;
 
 import com.liviapimentel.forumhub.domain.curso.Curso;
 import com.liviapimentel.forumhub.domain.resposta.Resposta;
+import com.liviapimentel.forumhub.domain.topico.dto.DadosRegistroTopico;
 import com.liviapimentel.forumhub.domain.usuario.Usuario;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Currency;
 import java.util.List;
 
 @Entity(name = "Topico")
@@ -39,4 +41,13 @@ public class Topico {
 
     @OneToMany(mappedBy = "topico", cascade = CascadeType.ALL)
     private List<Resposta> respostas = new ArrayList<>();
+
+    public Topico(DadosRegistroTopico dados, Usuario autor, Curso curso) {
+        this.titulo = dados.titulo();
+        this.mensagem = dados.mensagem();
+        this.dataCriacao = LocalDateTime.now();
+        this.status = StatusTopico.NAO_RESPONDIDO;
+        this.autor = autor;
+        this.curso = curso;
+    }
 }

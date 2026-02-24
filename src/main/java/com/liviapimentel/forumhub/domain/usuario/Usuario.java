@@ -25,4 +25,11 @@ public class Usuario {
     @Column(name = "perfil")
     @Enumerated(EnumType.STRING)
     private Set<Perfil> perfis = new HashSet<>();
+
+    public Usuario(DadosCadastroUsuario dados) {
+        this.nome = dados.nome();
+        this.email = dados.email();
+        this.senha = dados.senha();
+        this.perfis = dados.perfis();
+    }
 }

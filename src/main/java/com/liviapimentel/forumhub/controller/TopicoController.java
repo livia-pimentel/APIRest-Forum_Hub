@@ -29,8 +29,11 @@ public class TopicoController {
     @PostMapping
     @Transactional
     public void registrarTopico(@RequestBody DadosRegistroTopico dados) {
-        var autor = usuarioRepository.getReferenceById(dados.idAutor());
-        var curso = cursoRepository.getReferenceById(dados.idCurso());
+        var autor = usuarioRepository.findByNomeIgnoreCase(dados.autor().trim())
+                .orElseThrow(() -> new RuntimeException("Autor não encontrado"));
+
+        var curso = cursoRepository.findByNomeIgnoreCase(dados.curso().trim())
+                .orElseThrow(() -> new RuntimeException("Curso não encontrado"));
 
         var topico = new Topico(dados, autor, curso);
         topicoRepository.save(topico);

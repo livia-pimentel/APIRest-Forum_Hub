@@ -6,6 +6,7 @@ import com.liviapimentel.forumhub.domain.topico.TopicoRepository;
 import com.liviapimentel.forumhub.domain.topico.dto.DadosRegistroTopico;
 import com.liviapimentel.forumhub.domain.usuario.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +27,7 @@ public class TopicoController {
 
 
     @PostMapping
+    @Transactional
     public void registrarTopico(@RequestBody DadosRegistroTopico dados) {
         var autor = usuarioRepository.getReferenceById(dados.idAutor());
         var curso = cursoRepository.getReferenceById(dados.idCurso());

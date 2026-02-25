@@ -21,6 +21,14 @@ public class UsuarioController {
     @PostMapping
     @Transactional
     public void cadastrar(@RequestBody @Valid DadosCadastroUsuario dados) {
+
+        if (repository.existsByEmailIgnoreCase(dados.email())) {
+            throw new RuntimeException("Este e-mail já está cadastrado.");
+        }
+
+        if (repository.existsByNomeIgnoreCase(dados.nome())) {
+            throw new RuntimeException("Já existe usuário cadastrado com esse nome.");
+        }
         repository.save(new Usuario(dados));
     }
 }

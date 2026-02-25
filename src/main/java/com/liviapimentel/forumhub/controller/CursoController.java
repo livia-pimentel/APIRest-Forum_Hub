@@ -21,6 +21,11 @@ public class CursoController {
     @PostMapping
     @Transactional
     public void cadastrar(@RequestBody @Valid DadosCadastroCurso dados) {
+
+        if (repository.existsByNomeIgnoreCase(dados.nome())) {
+            throw new RuntimeException("Já existe um curso cadastrado com este nome!");
+        }
+
         repository.save(new Curso(dados));
     }
 }

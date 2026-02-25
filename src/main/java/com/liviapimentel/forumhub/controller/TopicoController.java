@@ -5,6 +5,7 @@ import com.liviapimentel.forumhub.domain.topico.Topico;
 import com.liviapimentel.forumhub.domain.topico.TopicoRepository;
 import com.liviapimentel.forumhub.domain.topico.dto.DadosRegistroTopico;
 import com.liviapimentel.forumhub.domain.usuario.UsuarioRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,7 +29,7 @@ public class TopicoController {
 
     @PostMapping
     @Transactional
-    public void registrarTopico(@RequestBody DadosRegistroTopico dados) {
+    public void registrarTopico(@RequestBody @Valid DadosRegistroTopico dados) {
         var autor = usuarioRepository.findByNomeIgnoreCase(dados.autor().trim())
                 .orElseThrow(() -> new RuntimeException("Autor não encontrado"));
 

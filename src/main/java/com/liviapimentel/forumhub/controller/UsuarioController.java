@@ -3,6 +3,7 @@ package com.liviapimentel.forumhub.controller;
 import com.liviapimentel.forumhub.domain.usuario.DadosCadastroUsuario;
 import com.liviapimentel.forumhub.domain.usuario.Usuario;
 import com.liviapimentel.forumhub.domain.usuario.UsuarioRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +20,7 @@ public class UsuarioController {
 
     @PostMapping
     @Transactional
-    public void cadastrar(@RequestBody DadosCadastroUsuario dados) {
+    public void cadastrar(@RequestBody @Valid DadosCadastroUsuario dados) {
         repository.save(new Usuario(dados));
     }
 }

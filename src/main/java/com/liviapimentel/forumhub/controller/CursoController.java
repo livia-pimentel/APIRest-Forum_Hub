@@ -3,6 +3,7 @@ package com.liviapimentel.forumhub.controller;
 import com.liviapimentel.forumhub.domain.curso.Curso;
 import com.liviapimentel.forumhub.domain.curso.CursoRepository;
 import com.liviapimentel.forumhub.domain.curso.DadosCadastroCurso;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +20,7 @@ public class CursoController {
 
     @PostMapping
     @Transactional
-    public void cadastrar(@RequestBody DadosCadastroCurso dados) {
+    public void cadastrar(@RequestBody @Valid DadosCadastroCurso dados) {
         repository.save(new Curso(dados));
     }
 }

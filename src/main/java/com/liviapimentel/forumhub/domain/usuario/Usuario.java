@@ -1,5 +1,6 @@
 package com.liviapimentel.forumhub.domain.usuario;
 
+import com.liviapimentel.forumhub.infra.utils.FormatacaoTexto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,7 +28,7 @@ public class Usuario {
     private Set<Perfil> perfis = new HashSet<>();
 
     public Usuario(DadosCadastroUsuario dados) {
-        this.nome = dados.nome();
+        this.nome = FormatacaoTexto.formatarNomeProprio(dados.nome());
         this.email = dados.email();
         this.senha = dados.senha();
         this.perfis = dados.perfis();

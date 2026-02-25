@@ -1,5 +1,6 @@
 package com.liviapimentel.forumhub.domain.curso;
 
+import com.liviapimentel.forumhub.infra.utils.FormatacaoTexto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,7 +18,7 @@ public class Curso {
     private String categoria;
 
     public Curso(DadosCadastroCurso dados) {
-        this.nome = dados.nome();
-        this.categoria = dados.categoria();
+        this.nome = FormatacaoTexto.formatarSentenca(dados.nome());
+        this.categoria = FormatacaoTexto.formatarSentenca(dados.categoria());
     }
 }

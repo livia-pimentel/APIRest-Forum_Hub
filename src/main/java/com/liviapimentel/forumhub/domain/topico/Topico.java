@@ -4,6 +4,7 @@ import com.liviapimentel.forumhub.domain.curso.Curso;
 import com.liviapimentel.forumhub.domain.resposta.Resposta;
 import com.liviapimentel.forumhub.domain.topico.dto.DadosRegistroTopico;
 import com.liviapimentel.forumhub.domain.usuario.Usuario;
+import com.liviapimentel.forumhub.infra.utils.FormatacaoTexto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -43,7 +44,7 @@ public class Topico {
     private List<Resposta> respostas = new ArrayList<>();
 
     public Topico(DadosRegistroTopico dados, Usuario autor, Curso curso) {
-        this.titulo = dados.titulo();
+        this.titulo = FormatacaoTexto.formatarSentenca(dados.titulo());
         this.mensagem = dados.mensagem();
         this.dataCriacao = LocalDateTime.now();
         this.status = StatusTopico.NAO_RESPONDIDO;

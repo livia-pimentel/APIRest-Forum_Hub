@@ -1,6 +1,7 @@
 package com.liviapimentel.forumhub.controller;
 
 import com.liviapimentel.forumhub.domain.curso.CursoRepository;
+import com.liviapimentel.forumhub.domain.topico.dto.DadosListagemTopico;
 import com.liviapimentel.forumhub.domain.topico.Topico;
 import com.liviapimentel.forumhub.domain.topico.TopicoRepository;
 import com.liviapimentel.forumhub.domain.topico.dto.DadosRegistroTopico;
@@ -8,10 +9,9 @@ import com.liviapimentel.forumhub.domain.usuario.UsuarioRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("topicos")
@@ -38,5 +38,12 @@ public class TopicoController {
 
         var topico = new Topico(dados, autor, curso);
         topicoRepository.save(topico);
+    }
+
+    @GetMapping()
+    public List<DadosListagemTopico> listar() {
+        return topicoRepository.findAll().stream()
+                .map(DadosListagemTopico::new)
+                .toList();
     }
 }

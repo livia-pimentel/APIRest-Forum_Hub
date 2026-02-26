@@ -1,8 +1,11 @@
 package com.liviapimentel.forumhub.domain.usuario;
 
+import com.liviapimentel.forumhub.domain.topico.dto.DadosAtualizarTopico;
+import com.liviapimentel.forumhub.domain.usuario.dto.DadosAtualizacaoUsuario;
 import com.liviapimentel.forumhub.domain.usuario.dto.DadosCadastroUsuario;
 import com.liviapimentel.forumhub.infra.utils.FormatacaoTexto;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import lombok.*;
 
 import java.util.HashSet;
@@ -33,5 +36,19 @@ public class Usuario {
         this.email = dados.email();
         this.senha = dados.senha();
         this.perfis = dados.perfis();
+    }
+
+    public void atualizarInformacoes(@Valid DadosAtualizacaoUsuario dados) {
+        if (dados.nome() != null) {
+            this.nome = FormatacaoTexto.formatarNomeProprio(dados.nome());
+        }
+
+        if (dados.email() != null) {
+            this.email = dados.email();
+        }
+
+        if (dados.perfis() != null && !dados.perfis().isEmpty()) {
+            this.perfis = dados.perfis();
+        }
     }
 }

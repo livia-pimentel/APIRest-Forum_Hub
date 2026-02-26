@@ -1,9 +1,7 @@
 package com.liviapimentel.forumhub.domain.topico.dto;
 
-import com.liviapimentel.forumhub.domain.curso.Curso;
 import com.liviapimentel.forumhub.domain.topico.StatusTopico;
 import com.liviapimentel.forumhub.domain.topico.Topico;
-import com.liviapimentel.forumhub.domain.usuario.Usuario;
 
 import java.time.LocalDateTime;
 

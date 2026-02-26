@@ -1,5 +1,6 @@
 package com.liviapimentel.forumhub.domain.curso;
 
+import com.liviapimentel.forumhub.domain.curso.dto.DadosCadastroCurso;
 import com.liviapimentel.forumhub.infra.utils.FormatacaoTexto;
 import jakarta.persistence.*;
 import lombok.*;

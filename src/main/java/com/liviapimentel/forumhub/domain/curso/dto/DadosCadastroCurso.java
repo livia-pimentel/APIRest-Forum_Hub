@@ -1,4 +1,4 @@
-package com.liviapimentel.forumhub.domain.curso;
+package com.liviapimentel.forumhub.domain.curso.dto;
 
 import jakarta.validation.constraints.NotBlank;
 

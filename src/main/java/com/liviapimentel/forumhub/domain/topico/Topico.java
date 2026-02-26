@@ -62,4 +62,8 @@ public class Topico {
             this.mensagem = dados.mensagem();
         }
     }
+
+    public void excluir() {
+        this.status = StatusTopico.FECHADO;
+    }
 }

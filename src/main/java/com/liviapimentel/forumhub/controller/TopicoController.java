@@ -9,6 +9,8 @@ import com.liviapimentel.forumhub.domain.topico.Topico;
 import com.liviapimentel.forumhub.domain.topico.TopicoRepository;
 import com.liviapimentel.forumhub.domain.topico.dto.DadosRegistroTopico;
 import com.liviapimentel.forumhub.domain.usuario.UsuarioRepository;
+import com.liviapimentel.forumhub.infra.ValidacaoException;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -41,12 +43,17 @@ public class TopicoController {
     public ResponseEntity registrarTopico(@RequestBody @Valid DadosRegistroTopico dados, UriComponentsBuilder uriBuilder) {
 
         var autor = usuarioRepository.findByNomeIgnoreCase(dados.autor().trim())
-                .orElseThrow(() -> new RuntimeException("Autor não encontrado"));
+                .orElseThrow(() -> new ValidacaoException("Autor não encontrado"));
+
         var curso = cursoRepository.findByNomeIgnoreCase(dados.curso().trim())
-                .orElseThrow(() -> new RuntimeException("Curso não encontrado"));
+                .orElseThrow(() -> new ValidacaoException("Curso não encontrado"));
+
         var topico = new Topico(dados, autor, curso);
+
         topicoRepository.save(topico);
+
         var uri = uriBuilder.path("/topicos/{id}").buildAndExpand(topico.getId()).toUri();
+
         return ResponseEntity.created(uri).body(new DadosDetalhamentoTopico(topico));
 
     }
@@ -75,20 +82,25 @@ public class TopicoController {
 
     @GetMapping("/{id}")
     public ResponseEntity detalhar(@PathVariable Long id) {
+        var topico = topicoRepository.getReferenceById(id);
 
-        var topico = topicoRepository.findByIdAtivo(id);
-        if (topico.isPresent()) {
-            return ResponseEntity.ok(new DadosDetalhamentoTopico(topico.get()));
+        if (topico.getStatus() == StatusTopico.FECHADO) {
+            throw new EntityNotFoundException();
         }
-        return ResponseEntity.notFound().build();
+
+        return ResponseEntity.ok(new DadosDetalhamentoTopico(topico));
 
     }
 
     @PutMapping("/{id}")
     @Transactional
     public ResponseEntity<DadosDetalhamentoTopico> atualizar(@PathVariable Long id, @RequestBody @Valid DadosAtualizarTopico dados) {
-
         var topico = topicoRepository.getReferenceById(id);
+
+        if (topico.getStatus() == StatusTopico.FECHADO) {
+            throw new EntityNotFoundException();
+        }
+
         topico.atualizarInformacoes(dados);
         return ResponseEntity.ok(new DadosDetalhamentoTopico(topico));
 

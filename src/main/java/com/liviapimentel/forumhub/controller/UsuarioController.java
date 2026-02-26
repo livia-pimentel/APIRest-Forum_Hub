@@ -6,6 +6,8 @@ import com.liviapimentel.forumhub.domain.usuario.Usuario;
 import com.liviapimentel.forumhub.domain.usuario.UsuarioRepository;
 import com.liviapimentel.forumhub.domain.usuario.dto.DadosDetalhamentoUsuario;
 import com.liviapimentel.forumhub.domain.usuario.dto.DadosListagemUsuario;
+import com.liviapimentel.forumhub.infra.ValidacaoException;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -28,10 +30,10 @@ public class UsuarioController {
     @Transactional
     public ResponseEntity cadastrar(@RequestBody @Valid DadosCadastroUsuario dados, UriComponentsBuilder uriBuilder) {
         if (repository.existsByEmailIgnoreCase(dados.email())) {
-            throw new RuntimeException("Este e-mail já está cadastrado.");
+            throw new ValidacaoException("Este e-mail já está cadastrado.");
         }
         if (repository.existsByNomeIgnoreCase(dados.nome())) {
-            throw new RuntimeException("Já existe usuário cadastrado com esse nome.");
+            throw new ValidacaoException("Já existe usuário cadastrado com esse nome.");
         }
 
         var usuario = new Usuario(dados);
@@ -51,18 +53,13 @@ public class UsuarioController {
 
     @GetMapping("/{id}")
     public ResponseEntity detalhar(@PathVariable Long id) {
-        var usuarioOptional = repository.findById(id);
+        var usuario = repository.getReferenceById(id);
 
-        if (usuarioOptional.isPresent()) {
-            var usuario = usuarioOptional.get();
-
-            // Se estiver inativo retorna um 404
-            if(!usuario.getAtivo()) {
-                return ResponseEntity.notFound().build();
-            }
-            return ResponseEntity.ok(new DadosDetalhamentoUsuario(usuario));
+        if(!usuario.getAtivo()) {
+            throw new EntityNotFoundException();
         }
-        return ResponseEntity.notFound().build();
+
+        return ResponseEntity.ok(new DadosDetalhamentoUsuario(usuario));
     }
 
     @GetMapping("/inativos")
@@ -77,6 +74,10 @@ public class UsuarioController {
     public ResponseEntity<DadosDetalhamentoUsuario> atualizar(@PathVariable Long id, @RequestBody @Valid DadosAtualizacaoUsuario dados) {
         var usuario = repository.getReferenceById(id);
 
+        if (!usuario.getAtivo()) {
+            throw new EntityNotFoundException();
+        }
+
         usuario.atualizarInformacoes(dados);
 
         return ResponseEntity.ok(new DadosDetalhamentoUsuario(usuario));
@@ -87,6 +88,11 @@ public class UsuarioController {
     public ResponseEntity excluir(@PathVariable Long id) {
 
         var usuario = repository.getReferenceById(id);
+
+        if (!usuario.getAtivo()) {
+            throw new EntityNotFoundException();
+        }
+
         usuario.excluir();
         return ResponseEntity.noContent().build();
     }

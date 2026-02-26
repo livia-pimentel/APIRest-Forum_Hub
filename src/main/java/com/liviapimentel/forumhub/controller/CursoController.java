@@ -6,6 +6,8 @@ import com.liviapimentel.forumhub.domain.curso.dto.DadosAtualizacaoCurso;
 import com.liviapimentel.forumhub.domain.curso.dto.DadosCadastroCurso;
 import com.liviapimentel.forumhub.domain.curso.dto.DadosDetalhamentoCurso;
 import com.liviapimentel.forumhub.domain.curso.dto.DadosListagemCurso;
+import com.liviapimentel.forumhub.infra.ValidacaoException;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -30,7 +32,7 @@ public class CursoController {
     @Transactional
     public ResponseEntity cadastrar(@RequestBody @Valid DadosCadastroCurso dados, UriComponentsBuilder uriBuilder) {
         if (repository.existsByNomeIgnoreCase(dados.nome())) {
-            throw new RuntimeException("Já existe um curso cadastrado com este nome!");
+            throw new ValidacaoException("Já existe um curso cadastrado com este nome!");
         }
 
         var curso = new Curso(dados);
@@ -73,6 +75,11 @@ public class CursoController {
     public ResponseEntity atualizar(@PathVariable Long id, @RequestBody @Valid DadosAtualizacaoCurso dados) {
 
         var curso = repository.getReferenceById(id);
+
+        if (!curso.getAtivo()) {
+            throw new EntityNotFoundException();
+        }
+
         curso.atualizarInformacoes(dados);
 
         return ResponseEntity.ok(new DadosDetalhamentoCurso(curso));
@@ -83,6 +90,11 @@ public class CursoController {
     public ResponseEntity excluir(@PathVariable Long id) {
 
         var curso = repository.getReferenceById(id);
+
+        if (!curso.getAtivo()) {
+            throw new EntityNotFoundException();
+        }
+
         curso.excluir();
         return ResponseEntity.noContent().build();
 

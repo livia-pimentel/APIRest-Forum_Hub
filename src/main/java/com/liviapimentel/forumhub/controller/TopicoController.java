@@ -1,6 +1,7 @@
 package com.liviapimentel.forumhub.controller;
 
 import com.liviapimentel.forumhub.domain.curso.CursoRepository;
+import com.liviapimentel.forumhub.domain.topico.StatusTopico;
 import com.liviapimentel.forumhub.domain.topico.dto.DadosAtualizarTopico;
 import com.liviapimentel.forumhub.domain.topico.dto.DadosDetalhamentoTopico;
 import com.liviapimentel.forumhub.domain.topico.dto.DadosListagemTopico;
@@ -54,6 +55,12 @@ public class TopicoController {
             direction = Sort.Direction.ASC
     ) Pageable paginacao ) {
         return topicoRepository.findAllAtivos(paginacao)
+                .map(DadosListagemTopico::new);
+    }
+
+    @GetMapping("/arquivados")
+    public Page<DadosListagemTopico> listarArquivados(Pageable paginacao) {
+        return topicoRepository.findAllByStatus(StatusTopico.FECHADO, paginacao)
                 .map(DadosListagemTopico::new);
     }
 

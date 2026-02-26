@@ -18,4 +18,6 @@ public interface TopicoRepository extends JpaRepository<Topico, Long> {
 
     @Query("SELECT t FROM Topico t WHERE t.id = :id AND t.status != 'FECHADO'")
     Optional<Topico> findByIdAtivo(Long id);
+
+    Page<Topico> findAllByStatus(StatusTopico status, Pageable paginacao);
 }

@@ -1,6 +1,7 @@
 package com.liviapimentel.forumhub.controller;
 
 import com.liviapimentel.forumhub.domain.curso.CursoRepository;
+import com.liviapimentel.forumhub.domain.topico.dto.DadosAtualizarTopico;
 import com.liviapimentel.forumhub.domain.topico.dto.DadosDetalhamentoTopico;
 import com.liviapimentel.forumhub.domain.topico.dto.DadosListagemTopico;
 import com.liviapimentel.forumhub.domain.topico.Topico;
@@ -64,5 +65,15 @@ public class TopicoController {
             return ResponseEntity.ok(new DadosDetalhamentoTopico(topico.get()));
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @PutMapping("/{id}")
+    @Transactional
+    public ResponseEntity<DadosDetalhamentoTopico> atualizar(@PathVariable Long id, @RequestBody @Valid DadosAtualizarTopico dados) {
+        var topico = topicoRepository.getReferenceById(id);
+
+        topico.atualizarInformacoes(dados);
+
+        return ResponseEntity.ok(new DadosDetalhamentoTopico(topico));
     }
 }

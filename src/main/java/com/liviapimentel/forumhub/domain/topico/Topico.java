@@ -2,10 +2,12 @@ package com.liviapimentel.forumhub.domain.topico;
 
 import com.liviapimentel.forumhub.domain.curso.Curso;
 import com.liviapimentel.forumhub.domain.resposta.Resposta;
+import com.liviapimentel.forumhub.domain.topico.dto.DadosAtualizarTopico;
 import com.liviapimentel.forumhub.domain.topico.dto.DadosRegistroTopico;
 import com.liviapimentel.forumhub.domain.usuario.Usuario;
 import com.liviapimentel.forumhub.infra.utils.FormatacaoTexto;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -50,5 +52,14 @@ public class Topico {
         this.status = StatusTopico.NAO_RESPONDIDO;
         this.autor = autor;
         this.curso = curso;
+    }
+
+    public void atualizarInformacoes(@Valid DadosAtualizarTopico dados) {
+        if (dados.titulo() != null) {
+            this.titulo = FormatacaoTexto.formatarSentenca(dados.titulo());
+        }
+        if (dados.mensagem() != null) {
+            this.mensagem = dados.mensagem();
+        }
     }
 }

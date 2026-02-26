@@ -1,6 +1,7 @@
 package com.liviapimentel.forumhub.controller;
 
 import com.liviapimentel.forumhub.domain.curso.CursoRepository;
+import com.liviapimentel.forumhub.domain.topico.dto.DadosDetalhamentoTopico;
 import com.liviapimentel.forumhub.domain.topico.dto.DadosListagemTopico;
 import com.liviapimentel.forumhub.domain.topico.Topico;
 import com.liviapimentel.forumhub.domain.topico.TopicoRepository;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,5 +54,15 @@ public class TopicoController {
     ) Pageable paginacao ) {
         return topicoRepository.findAll(paginacao)
                 .map(DadosListagemTopico::new);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity detalhar(@PathVariable Long id) {
+        var topico = topicoRepository.findById(id);
+
+        if (topico.isPresent()) {
+            return ResponseEntity.ok(new DadosDetalhamentoTopico(topico.get()));
+        }
+        return ResponseEntity.notFound().build();
     }
 }

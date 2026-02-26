@@ -19,4 +19,8 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     @Query(value = "SELECT DISTINCT u FROM Usuario u LEFT JOIN FETCH u.perfis WHERE u.ativo = true",
             countQuery = "SELECT COUNT(DISTINCT u) FROM Usuario u WHERE u.ativo = true")
     Page<Usuario> findAllAtivos(Pageable paginacao);
+
+    @Query(value = "SELECT DISTINCT u FROM Usuario u LEFT JOIN FETCH u.perfis WHERE u.ativo = false",
+            countQuery = "SELECT COUNT(DISTINCT u) FROM Usuario u WHERE u.ativo = false")
+    Page<Usuario> findAllInativos(Pageable paginacao);
 }

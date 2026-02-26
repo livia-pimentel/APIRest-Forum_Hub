@@ -62,6 +62,12 @@ public class UsuarioController {
         return ResponseEntity.notFound().build();
     }
 
+    @GetMapping("/inativos")
+    public Page<DadosListagemUsuario> listarInativos(@PageableDefault(size = 10, sort = {"id"}) Pageable paginacao) {
+        return repository.findAllInativos(paginacao)
+                .map(DadosListagemUsuario::new);
+    }
+
     @PutMapping("/{id}")
     @Transactional
     public ResponseEntity<DadosDetalhamentoUsuario> atualizar(@PathVariable Long id, @RequestBody @Valid DadosAtualizacaoUsuario dados) {

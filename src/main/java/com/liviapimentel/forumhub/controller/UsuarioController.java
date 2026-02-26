@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("usuarios")
@@ -86,9 +85,9 @@ public class UsuarioController {
     @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity excluir(@PathVariable Long id) {
+
         var usuario = repository.getReferenceById(id);
         usuario.excluir();
-
         return ResponseEntity.noContent().build();
     }
 }

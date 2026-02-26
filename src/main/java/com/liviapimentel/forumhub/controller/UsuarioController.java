@@ -1,7 +1,5 @@
 package com.liviapimentel.forumhub.controller;
 
-import com.liviapimentel.forumhub.domain.topico.dto.DadosAtualizarTopico;
-import com.liviapimentel.forumhub.domain.topico.dto.DadosDetalhamentoTopico;
 import com.liviapimentel.forumhub.domain.usuario.dto.DadosAtualizacaoUsuario;
 import com.liviapimentel.forumhub.domain.usuario.dto.DadosCadastroUsuario;
 import com.liviapimentel.forumhub.domain.usuario.Usuario;

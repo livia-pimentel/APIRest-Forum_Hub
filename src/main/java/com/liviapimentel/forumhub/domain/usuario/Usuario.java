@@ -1,5 +1,6 @@
 package com.liviapimentel.forumhub.domain.usuario;
 
+import com.liviapimentel.forumhub.domain.usuario.dto.DadosCadastroUsuario;
 import com.liviapimentel.forumhub.infra.utils.FormatacaoTexto;
 import jakarta.persistence.*;
 import lombok.*;
@@ -7,7 +8,7 @@ import lombok.*;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity(name = "Usuário")
+@Entity(name = "Usuario")
 @Table(name = "usuarios")
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor

@@ -1,15 +1,15 @@
 package com.liviapimentel.forumhub.controller;
 
-import com.liviapimentel.forumhub.domain.usuario.DadosCadastroUsuario;
+import com.liviapimentel.forumhub.domain.usuario.dto.DadosCadastroUsuario;
 import com.liviapimentel.forumhub.domain.usuario.Usuario;
 import com.liviapimentel.forumhub.domain.usuario.UsuarioRepository;
+import com.liviapimentel.forumhub.domain.usuario.dto.DadosListagemUsuario;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("usuarios")
@@ -30,5 +30,12 @@ public class UsuarioController {
             throw new RuntimeException("Já existe usuário cadastrado com esse nome.");
         }
         repository.save(new Usuario(dados));
+    }
+
+    @GetMapping
+    public List<DadosListagemUsuario> listar() {
+        return repository.findAllComPerfis().stream()
+                .map(DadosListagemUsuario::new)
+                .toList();
     }
 }

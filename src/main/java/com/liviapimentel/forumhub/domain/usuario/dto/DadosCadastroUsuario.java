@@ -1,5 +1,6 @@
-package com.liviapimentel.forumhub.domain.usuario;
+package com.liviapimentel.forumhub.domain.usuario.dto;
 
+import com.liviapimentel.forumhub.domain.usuario.Perfil;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;

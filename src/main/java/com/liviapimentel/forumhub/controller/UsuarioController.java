@@ -42,16 +42,22 @@ public class UsuarioController {
 
     @GetMapping
     public Page<DadosListagemUsuario> listar(@PageableDefault(size = 10, sort = {"nome"})  Pageable paginacao) {
-        return repository.findAllComPerfis(paginacao)
+        return repository.findAllAtivos(paginacao)
                 .map(DadosListagemUsuario::new);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity detalhar(@PathVariable Long id) {
-        var usuario = repository.findById(id);
+        var usuarioOptional = repository.findById(id);
 
-        if (usuario.isPresent()) {
-            return ResponseEntity.ok(new DadosDetalhamentoUsuario(usuario.get()));
+        if (usuarioOptional.isPresent()) {
+            var usuario = usuarioOptional.get();
+
+            // Se estiver inativo retorna um 404
+            if(!usuario.getAtivo()) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.ok(new DadosDetalhamentoUsuario(usuario));
         }
         return ResponseEntity.notFound().build();
     }
@@ -64,5 +70,14 @@ public class UsuarioController {
         usuario.atualizarInformacoes(dados);
 
         return ResponseEntity.ok(new DadosDetalhamentoUsuario(usuario));
+    }
+
+    @DeleteMapping("/{id}")
+    @Transactional
+    public ResponseEntity exclui(@PathVariable Long id) {
+        var usuario = repository.getReferenceById(id);
+        usuario.excluir();
+
+        return ResponseEntity.noContent().build();
     }
 }

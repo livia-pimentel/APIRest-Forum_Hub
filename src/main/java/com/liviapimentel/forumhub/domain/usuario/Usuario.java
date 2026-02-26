@@ -31,6 +31,9 @@ public class Usuario {
     @Enumerated(EnumType.STRING)
     private Set<Perfil> perfis = new HashSet<>();
 
+    @Column(columnDefinition = "tinyint")
+    private Boolean ativo = true;
+
     public Usuario(DadosCadastroUsuario dados) {
         this.nome = FormatacaoTexto.formatarNomeProprio(dados.nome());
         this.email = dados.email();
@@ -50,5 +53,9 @@ public class Usuario {
         if (dados.perfis() != null && !dados.perfis().isEmpty()) {
             this.perfis = dados.perfis();
         }
+    }
+
+    public void excluir() {
+        this.ativo = false;
     }
 }

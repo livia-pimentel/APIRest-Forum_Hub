@@ -53,13 +53,13 @@ public class TopicoController {
             sort = {"curso.nome", "dataCriacao"},
             direction = Sort.Direction.ASC
     ) Pageable paginacao ) {
-        return topicoRepository.findAll(paginacao)
+        return topicoRepository.findAllAtivos(paginacao)
                 .map(DadosListagemTopico::new);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity detalhar(@PathVariable Long id) {
-        var topico = topicoRepository.findById(id);
+        var topico = topicoRepository.findByIdAtivo(id);
 
         if (topico.isPresent()) {
             return ResponseEntity.ok(new DadosDetalhamentoTopico(topico.get()));

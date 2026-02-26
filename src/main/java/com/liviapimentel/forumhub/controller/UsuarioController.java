@@ -16,6 +16,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 
@@ -28,22 +29,27 @@ public class UsuarioController {
 
     @PostMapping
     @Transactional
-    public void cadastrar(@RequestBody @Valid DadosCadastroUsuario dados) {
-
+    public ResponseEntity cadastrar(@RequestBody @Valid DadosCadastroUsuario dados, UriComponentsBuilder uriBuilder) {
         if (repository.existsByEmailIgnoreCase(dados.email())) {
             throw new RuntimeException("Este e-mail já está cadastrado.");
         }
-
         if (repository.existsByNomeIgnoreCase(dados.nome())) {
             throw new RuntimeException("Já existe usuário cadastrado com esse nome.");
         }
-        repository.save(new Usuario(dados));
+
+        var usuario = new Usuario(dados);
+        repository.save(usuario);
+
+        var uri = uriBuilder.path("/usuarios/{id}").buildAndExpand(usuario.getId()).toUri();
+
+        return ResponseEntity.created(uri).body(new DadosDetalhamentoUsuario(usuario));
     }
 
     @GetMapping
-    public Page<DadosListagemUsuario> listar(@PageableDefault(size = 10, sort = {"nome"})  Pageable paginacao) {
-        return repository.findAllAtivos(paginacao)
+    public ResponseEntity<Page<DadosListagemUsuario>> listar(@PageableDefault(size = 10, sort = {"nome"})  Pageable paginacao) {
+        var page = repository.findAllAtivos(paginacao)
                 .map(DadosListagemUsuario::new);
+        return ResponseEntity.ok(page);
     }
 
     @GetMapping("/{id}")
@@ -63,9 +69,10 @@ public class UsuarioController {
     }
 
     @GetMapping("/inativos")
-    public Page<DadosListagemUsuario> listarInativos(@PageableDefault(size = 10, sort = {"id"}) Pageable paginacao) {
-        return repository.findAllInativos(paginacao)
+    public ResponseEntity<Page<DadosListagemUsuario>> listarInativos(@PageableDefault(size = 10, sort = {"id"}) Pageable paginacao) {
+        var page =  repository.findAllInativos(paginacao)
                 .map(DadosListagemUsuario::new);
+        return ResponseEntity.ok(page);
     }
 
     @PutMapping("/{id}")
@@ -80,7 +87,7 @@ public class UsuarioController {
 
     @DeleteMapping("/{id}")
     @Transactional
-    public ResponseEntity exclui(@PathVariable Long id) {
+    public ResponseEntity excluir(@PathVariable Long id) {
         var usuario = repository.getReferenceById(id);
         usuario.excluir();
 

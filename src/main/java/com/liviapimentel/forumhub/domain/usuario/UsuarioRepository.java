@@ -1,5 +1,7 @@
 package com.liviapimentel.forumhub.domain.usuario;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -13,6 +15,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
     boolean existsByNomeIgnoreCase(String nome);
 
-    @Query("SELECT DISTINCT u FROM Usuario u LEFT JOIN FETCH u.perfis")
-    List<Usuario> findAllComPerfis();
+    @Query(value = "SELECT u FROM Usuario u LEFT JOIN FETCH u.perfis",
+            countQuery = "SELECT count(u) FROM Usuario u")
+    Page<Usuario> findAllComPerfis(Pageable paginacao);
 }

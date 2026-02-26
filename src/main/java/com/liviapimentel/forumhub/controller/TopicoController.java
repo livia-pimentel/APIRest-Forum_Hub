@@ -8,6 +8,8 @@ import com.liviapimentel.forumhub.domain.topico.dto.DadosRegistroTopico;
 import com.liviapimentel.forumhub.domain.usuario.UsuarioRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,9 +43,8 @@ public class TopicoController {
     }
 
     @GetMapping()
-    public List<DadosListagemTopico> listar() {
-        return topicoRepository.findAll().stream()
-                .map(DadosListagemTopico::new)
-                .toList();
+    public Page<DadosListagemTopico> listar(Pageable paginacao ) {
+        return topicoRepository.findAll(paginacao)
+                .map(DadosListagemTopico::new);
     }
 }

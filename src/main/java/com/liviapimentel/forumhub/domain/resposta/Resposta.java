@@ -1,8 +1,10 @@
 package com.liviapimentel.forumhub.domain.resposta;
 
+import com.liviapimentel.forumhub.domain.resposta.dto.DadosCadastroResposta;
 import com.liviapimentel.forumhub.domain.topico.Topico;
 import com.liviapimentel.forumhub.domain.usuario.Usuario;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -28,4 +30,12 @@ public class Resposta {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "autor_id")
     private Usuario autor;
+
+    public Resposta(@Valid DadosCadastroResposta dados, Usuario autor, Topico topico) {
+        this.mensagem = dados.mensagem();
+        this.autor = autor;
+        this.topico = topico;
+        this.dataCriacao = LocalDateTime.now();
+        this.solucao = false;
+    }
 }

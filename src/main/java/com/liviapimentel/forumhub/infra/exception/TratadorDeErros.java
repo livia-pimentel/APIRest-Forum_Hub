@@ -7,6 +7,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
@@ -59,6 +60,7 @@ public class TratadorDeErros {
             DisabledException.class,
             InternalAuthenticationServiceException.class // Captura usuário inexistente
     })
+
     public ResponseEntity tratarErrosAutenticacao(Exception ex) {
         if (ex instanceof DisabledException) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Usuário inativo");

@@ -1,4 +1,4 @@
-package com.liviapimentel.forumhub.infra.exception;
+package com.liviapimentel.forumhub.infra.exception.dto;
 
 import org.springframework.validation.FieldError;
 

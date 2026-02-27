@@ -1,5 +1,7 @@
 package com.liviapimentel.forumhub.infra.exception;
 
+import com.liviapimentel.forumhub.infra.exception.dto.DadosErroMensagem;
+import com.liviapimentel.forumhub.infra.exception.dto.DadosErroValidacao;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;

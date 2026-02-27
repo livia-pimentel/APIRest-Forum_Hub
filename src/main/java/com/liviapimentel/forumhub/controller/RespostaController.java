@@ -49,6 +49,8 @@ public class RespostaController {
         var resposta = new Resposta(dados, autor, topico);
         respostaRepository.save(resposta);
 
+        topico.setStatus(StatusTopico.NAO_SOLUCIONADO);
+
         var uri = uriBuilder.path("/respostas/{id}").buildAndExpand(resposta.getId()).toUri();
         return ResponseEntity.created(uri).body(new DadosDetalhamentoResposta(resposta));
     }

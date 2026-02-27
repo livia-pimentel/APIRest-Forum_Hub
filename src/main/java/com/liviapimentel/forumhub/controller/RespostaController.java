@@ -13,10 +13,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
@@ -53,5 +50,20 @@ public class RespostaController {
 
         var uri = uriBuilder.path("/respostas/{id}").buildAndExpand(resposta.getId()).toUri();
         return ResponseEntity.created(uri).body(new DadosDetalhamentoResposta(resposta));
+    }
+
+    @PutMapping("/{id}/solucao")
+    @Transactional
+    public ResponseEntity marcarComoSolucionado(@PathVariable Long id) {
+        var resposta = respostaRepository.getReferenceById(id);
+        var topico = resposta.getTopico();
+
+        // Marca a resposta como solucionado
+        resposta.setSolucao(true);
+
+        // Muda o status do tópico automaticamente
+        topico.setStatus(StatusTopico.SOLUCIONADO);
+
+        return ResponseEntity.ok(new DadosDetalhamentoResposta(resposta));
     }
 }

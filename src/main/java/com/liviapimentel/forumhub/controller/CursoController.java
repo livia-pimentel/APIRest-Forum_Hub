@@ -6,20 +6,17 @@ import com.liviapimentel.forumhub.domain.curso.dto.DadosAtualizacaoCurso;
 import com.liviapimentel.forumhub.domain.curso.dto.DadosCadastroCurso;
 import com.liviapimentel.forumhub.domain.curso.dto.DadosDetalhamentoCurso;
 import com.liviapimentel.forumhub.domain.curso.dto.DadosListagemCurso;
-import com.liviapimentel.forumhub.infra.ValidacaoException;
+import com.liviapimentel.forumhub.infra.exception.ValidacaoException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("cursos")

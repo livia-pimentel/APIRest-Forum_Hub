@@ -1,4 +1,4 @@
-package com.liviapimentel.forumhub.infra;
+package com.liviapimentel.forumhub.infra.exception;
 
 import org.springframework.validation.FieldError;
 

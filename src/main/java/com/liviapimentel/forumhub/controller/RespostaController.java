@@ -7,7 +7,7 @@ import com.liviapimentel.forumhub.domain.resposta.dto.DadosDetalhamentoResposta;
 import com.liviapimentel.forumhub.domain.topico.StatusTopico;
 import com.liviapimentel.forumhub.domain.topico.TopicoRepository;
 import com.liviapimentel.forumhub.domain.usuario.UsuarioRepository;
-import com.liviapimentel.forumhub.infra.ValidacaoException;
+import com.liviapimentel.forumhub.infra.exception.ValidacaoException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

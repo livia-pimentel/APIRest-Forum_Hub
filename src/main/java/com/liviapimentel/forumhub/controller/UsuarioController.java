@@ -6,7 +6,7 @@ import com.liviapimentel.forumhub.domain.usuario.Usuario;
 import com.liviapimentel.forumhub.domain.usuario.UsuarioRepository;
 import com.liviapimentel.forumhub.domain.usuario.dto.DadosDetalhamentoUsuario;
 import com.liviapimentel.forumhub.domain.usuario.dto.DadosListagemUsuario;
-import com.liviapimentel.forumhub.infra.ValidacaoException;
+import com.liviapimentel.forumhub.infra.exception.ValidacaoException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

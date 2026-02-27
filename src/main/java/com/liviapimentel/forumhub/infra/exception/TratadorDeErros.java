@@ -1,4 +1,4 @@
-package com.liviapimentel.forumhub.infra;
+package com.liviapimentel.forumhub.infra.exception;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;

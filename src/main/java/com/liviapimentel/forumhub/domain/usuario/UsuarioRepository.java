@@ -25,5 +25,5 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
             countQuery = "SELECT COUNT(DISTINCT u) FROM Usuario u WHERE u.ativo = false")
     Page<Usuario> findAllInativos(Pageable paginacao);
 
-    UserDetails findByEmail(String email);
+    UserDetails findByEmailIgnoreCase(String email);
 }

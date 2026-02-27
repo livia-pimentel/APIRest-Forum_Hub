@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
-@RequestMapping("respostas")
+@RequestMapping("/topicos/{topicoId}/respostas")
 public class RespostaController {
 
     @Autowired

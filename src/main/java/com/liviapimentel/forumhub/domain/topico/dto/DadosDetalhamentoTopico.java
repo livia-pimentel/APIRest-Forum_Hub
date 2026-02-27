@@ -1,9 +1,11 @@
 package com.liviapimentel.forumhub.domain.topico.dto;
 
+import com.liviapimentel.forumhub.domain.resposta.dto.DadosDetalhamentoResposta;
 import com.liviapimentel.forumhub.domain.topico.StatusTopico;
 import com.liviapimentel.forumhub.domain.topico.Topico;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public record DadosDetalhamentoTopico(
         Long id,
@@ -12,7 +14,8 @@ public record DadosDetalhamentoTopico(
         LocalDateTime dataCriacao,
         String autor,
         String curso,
-        StatusTopico statusTopico
+        StatusTopico statusTopico,
+        List<DadosDetalhamentoResposta> respostas
 ) {
     public DadosDetalhamentoTopico(Topico topico) {
         this(
@@ -22,7 +25,10 @@ public record DadosDetalhamentoTopico(
                 topico.getDataCriacao(),
                 topico.getAutor().getNome(),
                 topico.getCurso().getNome(),
-                topico.getStatus()
+                topico.getStatus(),
+                topico.getRespostas().stream()
+                        .map(DadosDetalhamentoResposta::new)
+                        .toList()
         );
     }
 }

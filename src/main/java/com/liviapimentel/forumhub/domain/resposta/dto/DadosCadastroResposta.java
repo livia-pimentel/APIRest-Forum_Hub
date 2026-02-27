@@ -1,13 +1,14 @@
 package com.liviapimentel.forumhub.domain.resposta.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public record DadosCadastroResposta(
         @NotBlank
         String mensagem,
-        @NotBlank
+        @NotNull
         Long idAutor,
-        @NotBlank
+        @NotNull
         Long idTopico
 ) {
 }

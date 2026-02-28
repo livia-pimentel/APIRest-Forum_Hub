@@ -28,6 +28,12 @@ public class SecurityFilter extends OncePerRequestFilter {
         var tokenJWT = recuperarToken(request);
         if (tokenJWT != null) {
             var subject = tokenService.getSubject(tokenJWT);
+
+            // Força a autenticação
+            var usuario = repository.findByEmailIgnoreCase(subject);
+            // Metodo do próprio spring para authentication
+            var authentication = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
         // Chama o próximo filtro

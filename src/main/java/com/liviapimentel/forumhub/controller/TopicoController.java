@@ -8,6 +8,8 @@ import com.liviapimentel.forumhub.domain.topico.dto.DadosListagemTopico;
 import com.liviapimentel.forumhub.domain.topico.Topico;
 import com.liviapimentel.forumhub.domain.topico.TopicoRepository;
 import com.liviapimentel.forumhub.domain.topico.dto.DadosRegistroTopico;
+import com.liviapimentel.forumhub.domain.usuario.Perfil;
+import com.liviapimentel.forumhub.domain.usuario.Usuario;
 import com.liviapimentel.forumhub.domain.usuario.UsuarioRepository;
 import com.liviapimentel.forumhub.infra.exception.ValidacaoException;
 import jakarta.persistence.EntityNotFoundException;
@@ -17,7 +19,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -47,6 +52,11 @@ public class TopicoController {
                 .orElseThrow(() -> new ValidacaoException("Curso não encontrado"));
 
         var topico = new Topico(dados, autor, curso);
+
+        if (!curso.getAtivo()) {
+            return ResponseEntity.badRequest()
+                    .body("Não é permitido abrir novos tópicos para um curso inativo.");
+        }
 
         topicoRepository.save(topico);
 
@@ -92,11 +102,15 @@ public class TopicoController {
 
     @PutMapping("/{id}")
     @Transactional
-    public ResponseEntity<DadosDetalhamentoTopico> atualizar(@PathVariable Long id, @RequestBody @Valid DadosAtualizarTopico dados) {
+    public ResponseEntity<DadosDetalhamentoTopico> atualizar(@PathVariable Long id, @RequestBody @Valid DadosAtualizarTopico dados, @AuthenticationPrincipal Usuario logado) {
         var topico = topicoRepository.getReferenceById(id);
 
         if (topico.getStatus() == StatusTopico.FECHADO) {
             throw new EntityNotFoundException();
+        }
+
+        if (!logado.getPerfis().contains(Perfil.ADMIN) && !topico.getAutor().getId().equals(logado.getId())) {
+            throw new AccessDeniedException("Você não tem permissão para editar este tópico.");
         }
 
         topico.atualizarInformacoes(dados);
@@ -106,9 +120,13 @@ public class TopicoController {
 
     @DeleteMapping("/{id}")
     @Transactional
-    public ResponseEntity excluir(@PathVariable Long id) {
-
+    public ResponseEntity excluir(@PathVariable Long id, @AuthenticationPrincipal Usuario logado) {
         var topico = topicoRepository.getReferenceById(id);
+
+        if (!logado.getPerfis().contains(Perfil.ADMIN) && !topico.getAutor().getId().equals(logado.getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Você não tem permissão para deletar este tópico.");
+        }
+
         topico.excluir();
         return ResponseEntity.noContent().build();
 

@@ -3,6 +3,7 @@ package com.liviapimentel.forumhub.infra.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -27,6 +28,18 @@ public class SecurityConfigurations {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(req -> {
                     req.requestMatchers("/login").permitAll(); // Permite o acesso a página de login, as demais ficam bloqueadas até se autenticar
+
+                    // Permissões somente para ADMIN
+                    req.requestMatchers("/cursos/**").hasRole("ADMIN");
+                    req.requestMatchers(HttpMethod.GET, "/usuarios").hasRole("ADMIN");
+                    req.requestMatchers(HttpMethod.GET, "/usuarios/**").hasRole("ADMIN");
+                    req.requestMatchers(HttpMethod.DELETE, "/usuarios/**").hasRole("ADMIN");
+                    req.requestMatchers("/topicos/arquivados").hasRole("ADMIN");
+
+                    // Permissões de cadastro de usuário (ADMIN, MONITOR, PROFESSOR)
+                    req.requestMatchers(HttpMethod.POST, "/usuarios").hasAnyRole("ADMIN", "MONITOR", "PROFESSOR");
+
+
                     req.anyRequest().authenticated();// Qualquer outra rota, exceto login, precisa de autenticação
                 })
                 // Determina que o filtro da aplicação deve ser executada primeiro

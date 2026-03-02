@@ -6,12 +6,16 @@ import com.liviapimentel.forumhub.domain.resposta.dto.DadosCadastroResposta;
 import com.liviapimentel.forumhub.domain.resposta.dto.DadosDetalhamentoResposta;
 import com.liviapimentel.forumhub.domain.topico.StatusTopico;
 import com.liviapimentel.forumhub.domain.topico.TopicoRepository;
+import com.liviapimentel.forumhub.domain.usuario.Perfil;
+import com.liviapimentel.forumhub.domain.usuario.Usuario;
 import com.liviapimentel.forumhub.domain.usuario.UsuarioRepository;
 import com.liviapimentel.forumhub.infra.exception.ValidacaoException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -54,9 +58,14 @@ public class RespostaController {
 
     @PutMapping("/{id}/solucao")
     @Transactional
-    public ResponseEntity marcarComoSolucionado(@PathVariable Long id) {
+    public ResponseEntity marcarComoSolucionado(@PathVariable Long id, @AuthenticationPrincipal Usuario logado) {
         var resposta = respostaRepository.getReferenceById(id);
         var topico = resposta.getTopico();
+
+        if (!logado.getPerfis().contains(Perfil.ADMIN) && !topico.getAutor().getId().equals(logado.getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body("Apenas o autor do tópico ou um administrador alterar o status.");
+        }
 
         // Marca a resposta como solucionado
         resposta.setSolucao(true);

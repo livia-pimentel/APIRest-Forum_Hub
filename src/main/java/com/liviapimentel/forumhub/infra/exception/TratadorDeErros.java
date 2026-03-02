@@ -68,4 +68,9 @@ public class TratadorDeErros {
 
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Usuário inexistente ou senha inválida");
     }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity tratarErroAcessoNegado() {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Acesso negado: seu perfil não possui permissão para esta ação.");
+    }
 }

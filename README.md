@@ -64,7 +64,7 @@ Abaixo estão listados os principais endpoints da aplicação. Para detalhes sob
 | Método | Endpoint | Descrição | Acesso |
 | :--- | :--- | :--- | :--- |
 | `POST` | `/topicos/{id}/respostas` | Registra uma resposta em um tópico | Autenticado |
-| `PUT` | `/respostas/{id}/solucao` | Marca resposta como solução (Apenas Autor do Tópico ou Admin) | Autor/Admin |
+| `PUT` | `/topicos/{id}/respostas/{id}/solucao` | Marca resposta como solução (Apenas Autor do Tópico ou Admin) | Autor/Admin |
 
 ### 📚 Cursos
 | Método | Endpoint | Descrição               | Acesso |

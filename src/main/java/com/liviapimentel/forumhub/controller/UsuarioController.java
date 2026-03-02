@@ -1,5 +1,6 @@
 package com.liviapimentel.forumhub.controller;
 
+import com.liviapimentel.forumhub.domain.usuario.Perfil;
 import com.liviapimentel.forumhub.domain.usuario.dto.DadosAtualizacaoUsuario;
 import com.liviapimentel.forumhub.domain.usuario.dto.DadosCadastroUsuario;
 import com.liviapimentel.forumhub.domain.usuario.Usuario;
@@ -15,7 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -64,11 +67,16 @@ public class UsuarioController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity detalhar(@PathVariable Long id) {
+    public ResponseEntity detalhar(@PathVariable Long id, @AuthenticationPrincipal Usuario logado) {
         var usuario = repository.getReferenceById(id);
 
         if(!usuario.getAtivo()) {
             throw new EntityNotFoundException();
+        }
+
+        if (!logado.getPerfis().contains(Perfil.ADMIN) && !logado.getId().equals(id)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body("Acesso negado: Você só pode visualizar o seu próprio perfil.");
         }
 
         return ResponseEntity.ok(new DadosDetalhamentoUsuario(usuario));

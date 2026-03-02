@@ -32,6 +32,8 @@ public class SecurityConfigurations {
                     // Configuração Swagger
                     req.requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll();
 
+                    req.requestMatchers(HttpMethod.GET, "/usuarios/{id}").authenticated();
+
                     // Permissões somente para ADMIN
                     req.requestMatchers("/cursos/**").hasRole("ADMIN");
                     req.requestMatchers(HttpMethod.GET, "/usuarios").hasRole("ADMIN");

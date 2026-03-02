@@ -10,6 +10,7 @@ import com.liviapimentel.forumhub.domain.usuario.Perfil;
 import com.liviapimentel.forumhub.domain.usuario.Usuario;
 import com.liviapimentel.forumhub.domain.usuario.UsuarioRepository;
 import com.liviapimentel.forumhub.infra.exception.ValidacaoException;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequestMapping("/topicos/{topicoId}/respostas")
+@SecurityRequirement(name = "bearer-key")
 public class RespostaController {
 
     @Autowired

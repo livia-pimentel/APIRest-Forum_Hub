@@ -12,6 +12,8 @@ import com.liviapimentel.forumhub.domain.usuario.Perfil;
 import com.liviapimentel.forumhub.domain.usuario.Usuario;
 import com.liviapimentel.forumhub.domain.usuario.UsuarioRepository;
 import com.liviapimentel.forumhub.infra.exception.ValidacaoException;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequestMapping("topicos")
+@SecurityRequirement(name = "bearer-key")
 public class TopicoController {
 
     @Autowired
@@ -71,7 +74,7 @@ public class TopicoController {
             size = 10,
             sort = {"curso.nome", "dataCriacao"},
             direction = Sort.Direction.ASC
-    ) Pageable paginacao ) {
+    ) @Parameter(hidden = true) Pageable paginacao ) {
 
         var page =  topicoRepository.findAllAtivos(paginacao)
                 .map(DadosListagemTopico::new);
@@ -80,7 +83,7 @@ public class TopicoController {
     }
 
     @GetMapping("/arquivados")
-    public ResponseEntity<Page<DadosListagemTopico>>listarArquivados(Pageable paginacao) {
+    public ResponseEntity<Page<DadosListagemTopico>>listarArquivados(@Parameter(hidden = true) Pageable paginacao) {
 
         var page = topicoRepository.findAllByStatus(StatusTopico.FECHADO, paginacao)
                 .map(DadosListagemTopico::new);

@@ -7,6 +7,8 @@ import com.liviapimentel.forumhub.domain.curso.dto.DadosCadastroCurso;
 import com.liviapimentel.forumhub.domain.curso.dto.DadosDetalhamentoCurso;
 import com.liviapimentel.forumhub.domain.curso.dto.DadosListagemCurso;
 import com.liviapimentel.forumhub.infra.exception.ValidacaoException;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequestMapping("cursos")
+@SecurityRequirement(name = "bearer-key")
 public class CursoController {
 
     @Autowired
@@ -41,7 +44,7 @@ public class CursoController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<DadosListagemCurso>> listar(@PageableDefault(size = 10, sort = {"nome"}) Pageable paginacao) {
+    public ResponseEntity<Page<DadosListagemCurso>> listar(@PageableDefault(size = 10, sort = {"nome"}) @Parameter(hidden = true) Pageable paginacao) {
 
         var page = repository.findAllByAtivoTrue(paginacao)
                 .map(DadosListagemCurso::new);
@@ -60,7 +63,7 @@ public class CursoController {
     }
 
     @GetMapping("/inativos")
-    public ResponseEntity<Page<DadosDetalhamentoCurso>> listarInativos(@PageableDefault(size = 10, sort = {"id"}) Pageable paginacao) {
+    public ResponseEntity<Page<DadosDetalhamentoCurso>> listarInativos(@PageableDefault(size = 10, sort = {"id"}) @Parameter(hidden = true) Pageable paginacao) {
 
         var page = repository.findAllInativos(paginacao)
                 .map(DadosDetalhamentoCurso::new);
